@@ -44,18 +44,17 @@ let main = function() {
 		offlineMode: this.$persist(false),
 		username: this.$persist(''),
 		init() {
-			history.pushState(null, null, window.location.pathname)
-			window.addEventListener('popstate', function(event) {
-					event.preventDefault()
-					history.pushState(null, null, window.location.pathname)
-					this.escape()
-
-			})
 			this.authUrl = `https://anilist.co/api/v2/oauth/authorize?client_id=${this.dev?'6595':'6586'}&response_type=token`
 			if (document.location.hash.replace('#access_token=', '').length == 1121) {
 				this.accessToken = document.location.hash.match(/\#(?:access_token)\=([\S\s]*?)\&/)[1];
 				window.close()
 			}
+			window.addEventListener('popstate', function(event) {
+				event.preventDefault()
+				history.pushState(null, null, window.location.pathname)
+				this.escape()
+			})
+			history.pushState(null, null, window.location.pathname)
 			this.audio = {on: new Audio(), off: new Audio()}
 			this.audio.on.src = "/audio/on.ogg"
 			this.audio.off.src = "/audio/off.ogg"
@@ -171,14 +170,12 @@ let main = function() {
 			this.loading = ''
 		},
 		getMangas() {
-			if (this.loading) return []
 			let m = this.mangas.filter((e) => e.name.toLowerCase().replace(' ', '').trim().includes(this.searchMangas.toLowerCase().replace(' ', '').trim()))
 			if (this.mangaStatusFilter != 'any')
 				return m.filter((e) => e.status.status == this.mangaStatusFilter || (e.status.status == null && this.mangaStatusFilter == 'null'))
 			return m
 		},
 		getChapters() {
-			if (this.loading) return []
 			let res = this.chapters.filter((e) => e.toLowerCase().replace(' ', '').trim().includes(this.searchChapters.toLowerCase().replace(' ', '').trim())).sort()
 			if (this.chaptersOrderDescending) {
 				return res
