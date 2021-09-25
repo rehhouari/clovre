@@ -25,7 +25,7 @@ No build step, can run anywhere.
   
 ## Why
 
-I wanted a way to read manga comfortably on PC because it's been ages. After trying quite a few options, none met my special needs so I put this together over weekend.
+I wanted a way to read manga comfortably on PC because it's been ages. After trying quite a few options, none met my special needs so I put this together over the weekend.
 
 ## License
 
