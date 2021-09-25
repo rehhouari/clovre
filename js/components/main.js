@@ -18,6 +18,7 @@ let main = function() {
 			}
 		},
 		loading: '',
+		showUpdateBar: false,
 		clickToLoad: false,
 		loadedImages: 0,
 		dragover: false,
@@ -56,10 +57,53 @@ let main = function() {
 			this.audio = {on: new Audio(), off: new Audio()}
 			this.audio.on.src = "/audio/on.ogg"
 			this.audio.off.src = "/audio/off.ogg"
+			this.initSW()
 			if (this.firstStart) {
 				this.openMenu = true
 				this.firstStart = false
 			}
+		},
+		initSW() {
+			this.newWorker = null
+			let refreshing
+			if ('serviceWorker' in navigator) {
+				navigator.serviceWorker
+				.register('/sw.js')
+				.then((registration) => {
+					console.log(
+						'ServiceWorker registration successful with scope: ',
+						registration.scope
+						);
+					registration.addEventListener('updatefound', function () {
+						console.log('update found', this)
+						// A wild service worker has appeared in reg.installing!
+						this.newWorker = registration.installing;
+
+						this.newWorker.addEventListener('statechange', function () {
+							// Has network.state changed?
+							switch (this.newWorker.state) {
+								case 'installed':
+									if (navigator.serviceWorker.controller) {
+										// new update available
+										this.showUpdateBar = true
+									}
+									// No update available
+									break;
+							}
+						}.bind(this));
+					}.bind(this));
+				})
+				.catch(function (err) {
+					console.log('ServiceWorker registration failed: ', err);
+				});
+
+			}
+			navigator.serviceWorker.addEventListener('controllerchange', function () {
+				if (refreshing) return;
+				window.location.reload();
+				refreshing = true;
+			});
+
 		},
 		login() {
 			this.loading = 'login'

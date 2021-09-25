@@ -24,23 +24,6 @@
 	<!-- PWA -->
 	<link rel="manifest" href="/manifest.webmanifest" />
 	<script async src="https://cdn.jsdelivr.net/npm/pwacompat@2.x.x/pwacompat.min.js" crossorigin="anonymous"></script>
-	<script>
-		// NOTE: set to true in development to disable service worker
-		let dev = location.hostname == 'localhost';
-		if ('serviceWorker' in navigator) {
-			navigator.serviceWorker
-			.register('/sw.js')
-			.then(function (registration) {
-				console.log(
-					'ServiceWorker registration successful with scope: ',
-					registration.scope
-					);
-			})
-			.catch(function (err) {
-				console.log('ServiceWorker registration failed: ', err);
-			});
-		}
-	</script>
 	<!-- Favicons -->
 	<link
 	rel="icon"
@@ -63,12 +46,6 @@
 	type="text/css"
 	href="https://rsms.me/inter/inter.css"
 	/>
-	<script type="module">
-		import { setup, disconnect } from 'https://cdn.skypack.dev/twind/shim'
-		setup({
-			darkMode: 'class'
-		})
-	</script>
 	<style>
 		html {
 			font-family: 'Inter-var', system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "PT Sans", "Open Sans", "Fira Sans", "Droid Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
@@ -77,6 +54,10 @@
 		[x-cloak] { display: none }
 	</style>
 	<script defer type="module">
+		import { setup, disconnect } from 'https://cdn.skypack.dev/twind/shim'
+		setup({
+			darkMode: 'class'
+		})
 		import main from '/js/components/main.js'
 		import Alpine from 'https://unpkg.com/alpinejs@3.x.x/dist/module.esm.js'
 		import persist from 'https://unpkg.com/@alpinejs/persist@3.4.0/dist/module.esm.js'
@@ -204,24 +185,24 @@
 								<h2 class="text-xl mt-2">Folder Structure:</h2>
 								<p>Open the folder that have your mangas, make sure they're not under extra subdirectories:</p>
 								<pre class="text-xs p-1 bg-gray-200 rounded-lg text-black">
-Mangas (drop this)/
-├── Manga 1/
-│   ├── Chapter 1/
-│   │   ├── 0.jpg
-│   │   ├── 1.jpg
-│   │   └── ..
-│   └── Chapter 2/
-│       ├── page-0.png
-│       ├── page-1.png
-│       └── ..
-└── Manga 2/
-├── c-4/
-│   ├── image-1.jpg
-│   ├── image-2.jpg
-│   └── ...
-└── c-5/
-├── 0001.jpg
-└── 0002.jpg
+									Mangas (drop this)/
+									├── Manga 1/
+									│   ├── Chapter 1/
+									│   │   ├── 0.jpg
+									│   │   ├── 1.jpg
+									│   │   └── ..
+									│   └── Chapter 2/
+									│       ├── page-0.png
+									│       ├── page-1.png
+									│       └── ..
+									└── Manga 2/
+									├── c-4/
+									│   ├── image-1.jpg
+									│   ├── image-2.jpg
+									│   └── ...
+									└── c-5/
+									├── 0001.jpg
+									└── 0002.jpg
 								</pre>
 							</div>
 							<div class="">
@@ -438,6 +419,7 @@ Mangas (drop this)/
 				</template>
 			</div>
 		</template>
+		<button id="" x-show="showUpdateBar && !selectedChapter" @click="newWorker.postMessage({ action: 'skipWaiting' });" class="absolute bg-gray-400 dark:bg-gray-200 dark:text-gray-600 p-4 w-full shadow-md text-white font-semibold bottom-0 mx-auto">A new version of this app is available. Click to update.</button>
 	</div>
 </body>
 </html>
