@@ -15,6 +15,14 @@ var urlsToCache = [
 	'https://unpkg.com/alpinejs@3.x.x/dist/module.esm.js',
 	'https://cdn.skypack.dev/twind/shim',
 	'https://rsms.me/inter/inter.css',
+	'/images/icons/maskable_icon_x72.png',
+	'/images/icons/maskable_icon_x96.png',
+	'/images/icons/maskable_icon_x128.png',
+	'/images/icons/maskable_icon_x192.png',
+	'/images/icons/maskable_icon_x512.png',
+	'/images/icons/favicon-32x32.png',
+	'/images/icons/favicon-16x16.png',
+	'/images/icons/favicon.ico'
 ];
 
 self.addEventListener('install', function (event) {
