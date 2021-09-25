@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html class="" hidden>
+<head>
+	<title>Clovre - Local Manga & Webtoon Reader</title>
+	<meta charset="utf-8" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+	<meta name="viewport" content="width=device-width, initial-scale=1" />
+	<meta name="description" content="Local Manga & Webtoon Reader with Anilist.co integration" />
+	<meta name="author" content="rehhouari" />
+	<meta name="generator" content="Clovre" />
+	<link rel="canonical" href="https://clovre.vercel.app" />
+	<!-- PWA -->
+	<link rel="manifest" href="/manifest.webmanifest" />
+	<script async src="https://cdn.jsdelivr.net/npm/pwacompat@2.x.x/pwacompat.min.js" crossorigin="anonymous"></script>
+	<script>
+		// NOTE: set to true in development to disable service worker
+		let dev = location.hostname == 'localhost';
+		if ('serviceWorker' in navigator) {
+			navigator.serviceWorker
+				.register('/sw.js')
+				.then(function (registration) {
+					console.log(
+						'ServiceWorker registration successful with scope: ',
+						registration.scope
+					);
+				})
+				.catch(function (err) {
+					console.log('ServiceWorker registration failed: ', err);
+				});
+		}
+	</script>
+	<!-- Favicons -->
+	<link
+		rel="icon"
+		href="/images/icons/favicon-32x32.png"
+		sizes="32x32"
+		type="image/png"
+	/>
+	<link
+		rel="icon"
+		href="/images/icons/favicon-16x16.png"
+		sizes="16x16"
+		type="image/png"
+	/>
+	<link rel="icon" href="/images/icons/favicon.ico" />
+	<meta name="theme-color" content="#e5e7eb" />
+
+	<!-- Inter Font -->
+	<link
+		rel="stylesheet"
+		type="text/css"
+		href="https://rsms.me/inter/inter.css"
+	/>
+	<script type="module">
+		import { setup, disconnect } from 'https://cdn.skypack.dev/twind/shim'
+		setup({
+			darkMode: 'class'
+		})
+	</script>
+	<style>
+	html {
+		font-family: 'Inter-var', system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "PT Sans", "Open Sans", "Fira Sans", "Droid Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+		/*font-feature-settings: "cv02", "cv03", "cv04", "cv05", "cv08", "cv09", "cv10", "cv11", "calt", "kern";*/
+	}
+	</style>
+	<script defer type="module">
+		import main from '/js/components/main.js'
+		import Alpine from 'https://unpkg.com/alpinejs@3.x.x/dist/module.esm.js'
+		import persist from 'https://unpkg.com/@alpinejs/persist@3.4.0/dist/module.esm.js'
+		import trap from 'https://unpkg.com/@alpinejs/trap@3.x.x/dist/module.esm.js'
+		import intersect from 'https://unpkg.com/@alpinejs/intersect@3.x.x/dist/module.esm.js'
+		Alpine.data('main', main)
+		Alpine.plugin(persist)
+		Alpine.plugin(trap)
+		Alpine.plugin(intersect)
+		window.Alpine = Alpine
+		Alpine.start()
+	</script>
+</head>
+
+<body class="text-center bg-gray-400 text-gray-800 dark:(text-gray-600 bg-gray-900 p-0 transition-colors duration-300">
+	<div class="relative min-h-screen max-h-screen flex select-none" x-data="main()" @keydown.document.shift.d.prevent="toggle('darkMode')" @keydown.document.escape="escape" @keydown.document.ctrl.k.prevent="focusInput()" x-effect="document.querySelector('html').classList.toggle('dark', darkMode)" @keydown.document.shift.m="toggle('muteAudio')" @keydown.document.shift.space.stop="toggle('openMenu')" x-effect="if(loading) window.blur()"  @keydown.document="if (loading) { event.stopPropagation() }" @keydown.document.shift.f="toggle('offlineMode')" @keydown.document.shift.t="toggle('test')">
+		<!-- modal -->
+		<div class="absolute flex w-full h-screen max-w-full bg-black bg-opacity-50 z-10 lg:(px-40) transition-colors duration-300" x-transition x-show="openMenu && !loading">
+			<div class="w-full bg-white text-black dark:(bg-gray-800 text-white) transition-colors duration-300 shadow-xl p-2 lg:(p-4 rounded-lg) self-center items-center justify-center flex flex-col space-y-4 inset-x-0 mx-auto select-text" @click.away="openMenu = false; menuTab = 1">
+				<!-- about -->
+				<div class="mt-4 lg:mt-0">
+					<div class="">
+						<h1 class="text-center text-5xl font-black">Clovre</h1>
+						<p class="text-sm">Local Manga &amp; Webtoon Reader</p>
+					</div>
+				</div>
+				<!-- settings -->
+				<div class="flex flex-col flex-grow space-y-6" x-trap="openMenu && !loading">
+					<div class="flex">
+						<hr class="border-0 border-b-1 my-2 mx-auto">
+						<div class="flex flex-row items-center justify-evenly space-x-4">
+							<button class="text-2xl mt-2 font-bold opacity-60 transition-opacity" :class="{'opacity-100': menuTab==0}" @click="menuTab=0">Anilist</button>
+							<button class="text-2xl mt-2 font-bold opacity-60 transition-opacity" :class="{'opacity-100': menuTab==1}" @click="menuTab=1">Shortcuts</button>
+							<button class="text-2xl mt-2 font-bold opacity-60 transition-opacity" :class="{'opacity-100': menuTab==2}" @click="menuTab=2">About</button>
+						</div>
+						<hr class="border-0 border-b-1 my-2 mx-auto">
+					</div>
+					<div class="flex max-h-96">		
+						<!-- shortcuts tab -->
+						<div class="flex flex-col space-y-2 overflow-y-auto mb-4" x-show="menuTab==1">
+							<div class="flex flex-row bg-gray-200 dark:bg-gray-600 rounded-md p-2 transition-colors duration-100">
+								<div class="justify-start w-28 space-x-2 flex flex-row items-center">
+									<span class="font-bold">shift+space</span>
+								</div>
+								<div class="justify-end flex-grow">
+									<p class="text-base text-left">Show this window. (also in lower right corner)</p>
+								</div>
+							</div>
+							<div class="flex flex-row bg-gray-200 dark:bg-gray-600 rounded-md p-2 transition-colors duration-100">
+								<div class="justify-start w-28 space-x-2 flex flex-row items-center">
+									<span class="font-bold">escape</span>
+								</div>
+								<div class="justify-end flex-grow">
+									<p class="text-base text-left">Go back or close menu</p>
+								</div>
+							</div>
+							<div class="flex flex-row bg-gray-200 dark:bg-gray-600 rounded-md p-2 transition-colors duration-100">
+								<div class="justify-start w-28 space-x-2 flex flex-row items-center">
+									<label class="space-x-4"><input type="checkbox" class="" x-model="darkMode" aria-label="Toggle dark mode"><span class="font-bold">shift+d</span></label>
+								</div>
+								<div class="justify-end flex-grow">
+									<p class="text-base text-left">Toggle dark mode</p>
+								</div>
+							</div>
+							<div class="flex flex-row bg-gray-200 dark:bg-gray-600 rounded-md p-2 transition-colors duration-100">
+								<div class="justify-start w-28 space-x-2 flex flex-row items-center">
+									<label class="space-x-4"><input type="checkbox" class="" x-model="muteAudio" aria-label="Mute sound"><span class="font-bold">shift+m</span></label>
+								</div>
+								<div class="justify-end flex-grow">
+									<p class="text-base text-left">Mute sound</p>
+								</div>
+							</div>
+							<div class="flex flex-row bg-gray-200 dark:bg-gray-600 rounded-md p-2 transition-colors duration-100">
+								<div class="justify-start w-28 space-x-2 flex flex-row items-center">
+									<label class="space-x-4"><input type="checkbox" class="" x-model="chaptersOrderDescending" :aria-label="orderButtonLabel()"><span class="font-bold">shift+v</span></label>
+								</div>
+								<div class="justify-end flex-grow">
+									<p class="text-base text-left" x-text="'Chapters ' + orderButtonLabel()"></p>
+								</div>
+							</div>
+							<div class="flex flex-row bg-gray-200 dark:bg-gray-600 rounded-md p-2 transition-colors duration-100">
+								<div class="justify-start w-28 space-x-2 flex flex-row items-center">
+									<label class="space-x-4"><input type="checkbox" class="" x-model="offlineMode" aria-label="Toggle offline mode"><span class="font-bold">shift+f</span></label>
+								</div>
+								<div class="justify-end flex-grow">
+									<p class="text-base text-left">Toggle offline mode</p>
+								</div>
+							</div>
+							<div class="flex flex-row bg-gray-200 dark:bg-gray-600 rounded-md p-2 transition-colors duration-100">
+								<div class="justify-start w-28 space-x-2 flex flex-row items-center">
+									<span class="font-bold">shift+k</span>
+								</div>
+								<div class="justify-end flex-grow">
+									<p class="text-base text-left">Focus search input</p>
+								</div>
+							</div>
+							<div class="flex flex-row bg-gray-200 dark:bg-gray-600 rounded-md p-2 transition-colors duration-100">
+								<div class="justify-start w-28 space-x-2 flex flex-row items-center">
+									<span class="font-bold">left & right</span>
+								</div>
+								<div class="justify-end flex-grow">
+									<p class="text-base text-left">* Go to previous or next chapter respectively</p>
+								</div>
+							</div>
+
+							<div class="flex flex-row bg-gray-200 dark:bg-gray-600 rounded-md p-2 transition-colors duration-100">
+								<div class="justify-start w-28 space-x-2 flex flex-row items-center">
+									<span class="font-bold">0 to 3</span>
+								</div>
+								<div class="justify-end flex-grow self-center">
+									<p class="text-base text-left">* Set page width. Current:
+										<span x-show="pageSize == 0">Default</span>
+										<span x-show="pageSize == 1">Small</span>
+										<span x-show="pageSize == 2">Medium</span>
+										<span x-show="pageSize == 3">Fullscreen</span>
+									</p>
+								</div>
+							</div>
+							<p class="text-xs">*: these shortcuts only work when reading a chapter.</p>
+						</div>
+						<!-- about tab -->
+						<div class="flex flex-col space-y-2 flex-grow items-center overflow-y-auto" x-show="menuTab==2">
+							<div class="text-sm mx-4 lg:mx-16 text-left pb-4 border-b-1 space-y-2">
+								<p>A web up with a clean interface &amp; Anilist integration to read your downloaded manga comfortably.</p>
+								<h2 class="text-xl mt-2">Folder Structure:</h2>
+								<p>Open the folder that have your mangas, make sure they're not under extra subdirectories:</p>
+<pre class="text-xs p-1 bg-gray-200 rounded-lg text-black">
+	Mangas (drop this)/
+	├── Manga 1/
+	│   ├── Chapter 1/
+	│   │   ├── 0.jpg
+	│   │   ├── 1.jpg
+	│   │   └── ..
+	│   └── Chapter 2/
+	│       ├── page-0.png
+	│       ├── page-1.png
+	│       └── ..
+	└── Manga 2/
+	    ├── c-4/
+	    │   ├── image-1.jpg
+	    │   ├── image-2.jpg
+	    │   └── ...
+	    └── c-5/
+	        ├── 0001.jpg
+	        └── 0002.jpg
+</pre>
+							</div>
+							<div class="">
+								<p class="text-xs w-80 max-w-full my-4">Made by <a href="https://twitter.com/rehhouari" class="font-bold">@rehhouari</a>. <a href="https://github.com/rehhouari/clovre" class="underline">MIT License</a></p>
+							</div>
+						</div>
+						<!-- anilist tab -->
+						<div class="flex flex-col space-y-2 h-48 flex-grow" x-show="menuTab==0">
+							<template x-if='accessToken'>
+								<div class="flex flex-col space-y-2">
+									<p class="">Welcome, <a x-text="username" class="font-bold underline" :href="'https://anilist.co/user/'+username" target="_blank">weeb</a></p>
+									<button @click="logout"class="p-2 rounded-lg font-bold bg-gray-200 dark:(bg-gray-400 text-white) transition-colors duration-300 shadow-sm hover:shadow-lg cursor-pointer">
+										Logout
+									</button>
+									<button @click="refreshData"class="p-2 rounded-lg font-bold bg-gray-200 dark:(bg-gray-400 text-white) transition-colors duration-300 shadow-sm hover:shadow-lg cursor-pointer" x-show="loaded">
+										Refresh Local Data
+									</button>
+								</div>
+							</template>
+							<template x-if='!accessToken'>
+								<a :href="authUrl" @click="login" target="_blank" class="p-2 rounded-lg font-bold bg-gray-200 dark:(bg-gray-400 text-white) transition-colors duration-300 shadow-sm hover:shadow-lg cursor-pointer">
+									Login with Anilist
+								</a>
+							</template>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!-- Menu button -->
+		<div class="fixed bottom-0 right-0 group">
+			<button @click="toggle('openMenu')" class="bg-transparent text-transparent group-hover:(bg-white text-current dark:bg-gray-800 dark:text-white) focus:(bg-white text-current dark:bg-gray-800 dark:text-white) p-4 m-4 rounded-lg font-bold shadow-sm hover:shadow-lg cursor-pointer" aria-label="Menu">
+				<svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+					<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+				</svg>
+			</button>
+		</div>
+		<!-- loading screen -->
+		<template x-if="loading">
+			<div class="cursor-wait">
+				<template x-if="loading =='login'">
+					<div class="mx-auto text-current bg-gray-200 dark:(bg-gray-400 text-white) transition-colors duration-300 w-screen h-screen max-w-full shadow-lg p-4 lg:(m-4 rounded-xl) flex flex-row items-center">
+						<p class="dark:text-gray-800 text-2xl font-bold flex-grow transition-colors duration-300">Waiting for token...</p>
+					</div>
+				</template>
+				<template x-if="loading == 'mangas'">
+					<div class="flex flex-col space-y-2 flex-grow h-full dark:bg-gray-600 z-50  bg-gray-200 p-2 lg:p-4 lg:m-4 lg:rounded-xl">
+						<div class="flex flex-row space-x-2 p-2 py-4 w-full max-h-10 h-10 rounded-lg bg-white dark:bg-gray-400">
+						</div>
+						<div class="flex space-y-4 overflow-y-auto justify-evenly space-x-4 sm:justify-start flex-wrap flex-grow">
+							<template x-for="i in 10">
+								<div class="flex flex-col w-36 max-h-60 bg-white dark:bg-gray-400 my-2 p-1 rounded-lg box-content">
+									<div class="max-w-full w-36 h-48 bg-gray-400 text-gray-200 dark:(bg-gray-300 text-current)  flex items-center rounded-t-lg" aria-hidden="true" focusable="false">
+									</div>
+									<p class="text-sm font-bold m-1 dark:text-white self-center  items-topx flex items-center overflow-hidden h-10"></p>
+								</div>
+							</template>
+						</div>
+					</div>
+				</template>
+				<template x-if="loading == 'manga'">
+					<div class="flex flex-col space-y-2 w-screen h-full overflow-y-hidden dark:bg-gray-600 bg-gray-200 p-2 lg:p-4 lg:m-4 lg:rounded-xl ">
+						<div class="flex flex-row md:space-x-2 ">
+							<div class="hidden md:(flex flex-grow-0 flex-col self-end)">	
+								<div class="max-w-full w-36 h-48 bg-gray-400 dark:bg-gray-200 flex items-center rounded-lg" >
+									<p class="w-full"></p>
+								</div>
+							</div>
+							<div class="flex flex-col flex-grow md:flex-shrink">
+								<div class="self-top flex-grow flex flex-col space-y-2">
+									<p class="text-4xl md:text-6xl m-1 rounded-lg bg-gray-400 dark:bg-gray-100 self-top text-left">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+								</div>
+								<div class="flex flex-row space-x-2 mt-2">
+									<div class="p-6 flex-grow rounded-lg bg-gray-300"></div>
+								</div>
+							</div>
+						</div>
+
+						<div class="max-w-full w-full flex flex-grow flex-col space-y-4 overflow-y-hidden">
+							<template x-for="i in 8">
+								<div class="bg-white dark:bg-gray-400 py-4 flex-grow rounded-lg cursor-pointer"><p class="min-w-full w-full">&nbsp;</p></div>
+							</template>
+						</div>
+					</div>
+				</template>
+				<template x-if="loading == 'chapter'">
+					<div class="mx-auto inline-block overflow-y-auto pb-2 overflow-y-hidden w-screen h-screen">
+						<div class="mx-auto">
+							<div style="height:800px; width:600px" class="bg-gray-200 max-w-full mx-auto" :class="imageSize(false)"></div>
+						</div>
+					</div>
+				</template>
+			</div>
+		</template>
+		<template x-if="test">
+			<div class="mx-auto inline-block overflow-y-auto pb-2 overflow-y-hidden">
+				<div class="mx-auto">
+					<div style="height:800px; width:600px" class="bg-gray-200 max-w-full mx-auto" :class="imageSize(false)"></div>
+				</div>
+			</div>
+		</template>
+		<!-- directory open screen-->
+		<template x-if="!loaded && !loading && !test">
+			<button class="mx-auto text-current bg-gray-200 dark:(bg-gray-400 text-white) transition-colors duration-300 w-full max-w-full shadow-lg p-4 lg:(m-4 rounded-xl) flex flex-row items-center" @drop.prevent="dropMangasDirectory" @dragover.prevent="dragover = true" @dragleave="dragover = false"  @click="openMangasDir" >
+				<p class="dark:text-gray-800 text-2xl font-bold flex-grow transition-colors duration-300"><span x-show="!dragover">Click to open a folder that contain your mangas or drag and drop it.</span><span x-show="dragover">Drop directory</span></p>
+			</button>
+		</template>
+		<!-- manga selection -->
+		<template x-if="loaded && selectedManga == null && !loading && !test">
+			<div class="flex flex-col space-y-2 flex-grow dark:bg-gray-600 transition-colors duration-300 bg-gray-200 p-2 lg:p-4 lg:m-4 lg:rounded-xl shadow-sm">
+				<div class="flex flex-row space-x-2">
+					<input type="search" class="p-2 w-full flex-grow rounded-lg font-bold bg-white dark:(bg-gray-400 text-white placeholder-gray-200) transition-colors duration-300 shadow-sm focus:shadow-lg" placeholder="Search Mangas" x-model="searchMangas" autofocus aria-label="Search Mangas" x-ref="searchMangas" @keydown.escape.stop="blur()">
+					<select x-model="mangaStatusFilter" class="h-10 p-2 bg-white dark:(bg-gray-400 text-white placeholder-gray-200) transition-colors duration-200 font-bold rounded-lg shadow-sm enabled:hover:shadow-lg enabled:cursor-pointer disabled:cursor-not-allowed" title="Filter by Status">
+						<option value="any">Any</option>
+						<option value="CURRENT">Reading</option>
+						<option value="PLANNING">Planning to</option>
+						<option value="COMPLETED">Completed </option>
+						<option value="DROPPED">Dropped</option>
+						<option value="PAUSED">Paused</option>
+						<option value="REPEATING">Repeating</option>
+						<option value="null">Unlisted</option>
+					</select>
+				</div>
+				<div class="flex space-y-4 overflow-y-auto justify-evenly space-x-4 sm:justify-start flex-wrap flex-grow">
+					<template x-for="manga in getMangas()" :key="manga.id">
+						<button class="flex flex-col w-36 max-h-60 bg-white dark:bg-gray-400 transition-colors duration-300 p-1 rounded-lg shadow-sm hover:shadow-lg cursor-pointer box-content transition duration-100 ease-in transform hover:(scale-105) focus:(scale-105)" x-data="{loadedImage: false}" @click=selectManga(manga.name) aria-label="manga.name">
+							<img :src="manga.coverImage" class="max-w-full rounded-t-lg h-48 mx-auto w-36" x-show="loadedImage && manga.coverImage" @load="loadedImage=true" :alt="manga.name + ' Cover Art'"/>
+							<div class="max-w-full w-36 h-48 bg-gray-400 text-gray-200 dark:(bg-gray-300 text-current) transition-colors duration-300 flex items-center rounded-t-lg" x-show="!loadedImage || !manga.coverImage" aria-hidden="true" focusable="false">
+								<p x-text="manga.name" class="w-full font-bold"></p>
+							</div>
+							<p class="text-sm font-bold m-1 dark:text-white self-center transition-colors duration-300 items-topx flex items-center overflow-hidden h-10" :title="manga.name"><span x-text="manga.name.substr(0, 24)"></span></p>
+						</button>
+					</template>
+				</div>
+			</div>
+		</template>
+		<!-- chapter selection & manga details -->
+		<template x-if="loaded && selectedManga && selectedChapter==null && !loading && !test">
+			<div class="flex flex-col space-y-2 flex-grow dark:bg-gray-600 transition-colors duration-300 bg-gray-200 p-2 lg:p-4 lg:m-4 lg:rounded-xl shadow-sm" @keyup.document.shift.v="toggle('chaptersOrderDescending')">
+				<div class="flex flex-row md:space-x-2 ">
+					<div class="hidden md:(flex flex-grow-0 flex-col self-end)">	
+						<img :src="selectedMangaData.coverImage" class="max-w-full w-40 rounded-lg " x-show="selectedMangaData.coverImage"/>
+						<div class="max-w-full w-36 h-48 bg-gray-400 text-gray-200 dark:(bg-gray-300 text-current) transition-colors duration-300 flex items-center rounded-lg" x-show="!selectedMangaData.coverImage">
+							<p x-text="selectedMangaData.name" class="w-full font-bold"></p>
+						</div>
+					</div>
+					<div class="flex flex-col flex-grow md:flex-shrink">
+						<div class="self-top flex-grow flex flex-col space-y-2">
+							<p class="text-2xl md:text-4xl font-black m-1 flex-grow dark:text-gray-100 transition-colors duration-300 self-top text-left select-text" :class="{'text-4xl md:text-6xl':selectedMangaData.name.length < 30}" x-text="selectedMangaData.name"></p>
+							<div class="flex flex-col space-y-2 md:(flex-row space-y-0 space-x-2 items-end)" x-show="selectedMangaData.coverImage">
+								<a :href="`https://anilist.co/manga/${selectedMangaData.id}`" target="_blank" class="font-bold bg-gray-800 rounded-lg shadow-sm hover:shadow-lg cursor-pointer w-full md:w-10 flex items-center" aria-label="Open in Anilist.co" title="Open in Anilist.co">
+									<img src="/images/anilist-icon.svg" class="mx-2 md:mx-0 w-10 inline-block" focusable="false" aria-hidden></img>
+									<span class="md:hidden justify-start font-semibold flex-grow text-white">Open in Anilist</span>
+								</a>
+								<button class="bg-blue-500 rounded-lg text-white p-1 flex flex-row items-center shadow-sm enabled:hover:shadow-lg disabled:cursor-not-allowed" title="Refresh Data" @click="refreshManga(selectedMangaData)" :disabled="!window.navigator.onLine">
+									<svg xmlns="http://www.w3.org/2000/svg" class="mx-2 md:mx-0 h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+										<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
+									</svg>
+									<span class="md:hidden justify-start font-semibold flex-grow">Refresh Data</span>
+								</button>
+								<template x-if="accessToken">
+									<div class="flex flex-col space-y-2 md:(flex-row space-y-0 space-x-2)">
+										<button class="bg-red-500 rounded-lg text-white p-1 flex flex-row items-center shadow-sm enabled:hover:shadow-lg disabled:cursor-not-allowed" @click="favoriteToggle()" :class="{'children:fill-current': selectedMangaData.favorited}" :disabled="!window.navigator.onLine || !accessToken" title="Toggle Favorite">
+											<svg xmlns="http://www.w3.org/2000/svg" class="mx-2 md:mx-0 h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+												<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path>
+											</svg>
+											<span class="md:hidden justify-start font-semibold flex-grow" x-text="selectedMangaData.favorited?'Unfavorite':'Favorite'"></span>
+										</button>
+										<div class="flex bg-white dark:(bg-gray-400 text-white placeholder-gray-200) transition-colors duration-300 rounded-lg shadow-sm enabled:hover:shadow-lg overflow-hidden items-center">
+											<svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 ml-4 md:ml-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+												<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
+											</svg>
+											<select x-effect="$el.selectedIndex = selectedMangaData.status.index" class="h-10 p-2 mx-2 flex-grow bg-white dark:(bg-gray-400 text-white placeholder-gray-200) transition-colors duration-200 font-bold cursor-pointer disabled:cursor-not-allowed" :disabled="!window.navigator.onLine || !accessToken" @change="setStatus($el.selectedOptions[0].value)" title="Set Status">
+												<option :disabled="selectedMangaData.status.satus == $el.value" value="null">Unlisted</option>
+												<option :disabled="selectedMangaData.status.satus == $el.value" value="CURRENT">Reading</option>
+												<option :disabled="selectedMangaData.status.satus == $el.value" value="PLANNING">Planning to</option>
+												<option :disabled="selectedMangaData.status.satus == $el.value" value="COMPLETED">Completed </option>
+												<option :disabled="selectedMangaData.status.satus == $el.value" value="DROPPED">Dropped</option>
+												<option :disabled="selectedMangaData.status.satus == $el.value" value="PAUSED">Paused</option>
+												<option :disabled="selectedMangaData.status.satus == $el.value" value="REPEATING">Repeating</option>
+											</select>
+										</div>
+										<div class="bg-white shadow-sm focus:shadow-lg rounded-lg font-bold bg-white dark:(bg-gray-400 text-white placeholder-gray-200) overflow-hidden transition-colors duration-300 shadow-sm flex items-center">
+											<input type="number" min="0" :max="selectedMangaData.chapters??9999" x-effect="$el.value = selectedMangaData.status.progress" class="font-bold py-2 px-4 md:px-2 bg-transparent flex-grow disabled:cursor-not-allowed" placeholder="" aria-label="Progress" @keydown.escape.stop="blur()" @input="setProgress($el.value)" :disabled="!window.navigator.onLine || !accessToken">
+											<div class="inline border-l-2 h-full"></div>
+											<span class="font-bold mx-2 opacity-80"><span x-text="selectedMangaData.chapters" x-show="selectedMangaData.chapters"></span><span x-show="!selectedMangaData.chapters" class="text-2xl">&infin;</span></span>
+										</div>
+									</div>
+								</template>
+							</div>
+						</div>
+						<div class="flex flex-row space-x-2 mt-2">
+							<input type="search" class="w-full p-2 rounded-lg font-bold bg-white dark:(bg-gray-400 text-white placeholder-gray-200) transition-colors duration-300 shadow-sm focus:shadow-lg" placeholder="Search Chapters" x-model="searchChapters" aria-label="Search Mangas" x-ref="searchChapters" @keydown.escape.stop="blur()">
+							<button @click="toggle('chaptersOrderDescending')" class="p-2 rounded-lg font-bold bg-white dark:(bg-gray-400 text-white) transition-colors duration-300 shadow-sm hover:shadow-lg cursor-pointer" :aria-label="orderButtonLabel()">
+								<svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" x-show="!chaptersOrderDescending" aria-hidden="true" focusable="false">
+									<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4h13M3 8h9m-9 4h6m4 0l4-4m0 0l4 4m-4-4v12" />
+								</svg>
+								<svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" x-show="chaptersOrderDescending" aria-hidden="true" focusable="false">
+									<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4h13M3 8h9m-9 4h9m5-4v12m0 0l-4-4m4 4l4-4" />
+								</svg>
+							</button>
+						</div>
+					</div>
+
+				</div>
+
+				<div class="max-w-full w-full flex flex-grow flex-col space-y-4 overflow-y-auto">
+					<template x-for="(chapter, index) in getChapters()" :key="index">
+						<button class="bg-white  dark:(bg-gray-400 text-white) transition-colors duration-300 py-2 rounded-lg shadow-sm hover:shadow-md cursor-pointer font-bold text-xl" x-text="chapter" @click=selectChapter(chapter)></button>
+					</template>
+				</div>
+			</div>
+		</template>
+		<!-- reading screen -->
+		<template x-if="selectedChapter!=null && loaded && selectedManga && !loading">
+			<div class="mx-auto inline-block overflow-y-auto pb-2" @keydown.document.left="previousChapter()" @keydown.document.right="nextChapter()" @keydown.document.1="setPageWidth(1)" @keydown.document.2="setPageWidth(2)" @keydown.document.3="setPageWidth(3)" @keydown.document.0="setPageWidth(0)">
+				<template x-for="(page, index) in pages.sizes" :key="index">
+					<div class="mx-auto" x-data="{load: (index == 0 && !clickToLoad)}" x-init="if (load) loadedImages++">
+						<img class="select-auto max-w-full mx-auto !cursor-default" :class="imageSize(!load)" x-intersect.leave="clickToLoad || loadedImages <= 1 ? false: load = false; loadedImages--"  x-effect="load && pages.images[index]!=null ? $el.src = pages.images[index] : $el.src = ''"/>
+						<div :style="skeletonSize(page)" class="bg-gray-200 max-w-full mx-auto" @click="clickToLoad? load = true:false" :class="imageSize(load)" x-intersect.enter="clickToLoad ? false: load = true; loadedImages++" :title="clickToLoad?'Click To Load Image':''"></div>
+					</div>
+				</template>
+			</div>
+		</template>
+	</div>
+</body>
+</html>
