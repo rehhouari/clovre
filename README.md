@@ -11,7 +11,7 @@ If you find this useful consider [following me](https://rehhouari.bio.link/)!
 - Clutter-free responsive interface: every setting have a shortcut.
 - Adjustable page width + full screen: no more zooming out!
 - Dark mode toggle, accessible interface, and optional audio feedback. 
-- [Anilist](https://anilist.co) integration to load covers (cached) & login to set progress etc., without leaving the app.
+- [Anilist](https://anilist.co) integration to fetch covers & login to set progress etc., without leaving the app.
     - Runs offline, loading covers and anilist login is optional. Offline toggle is provided.
 
 ## Demo

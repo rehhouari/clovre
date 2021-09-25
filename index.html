@@ -17,39 +17,39 @@
 		let dev = location.hostname == 'localhost';
 		if ('serviceWorker' in navigator) {
 			navigator.serviceWorker
-				.register('/sw.js')
-				.then(function (registration) {
-					console.log(
-						'ServiceWorker registration successful with scope: ',
-						registration.scope
+			.register('/sw.js')
+			.then(function (registration) {
+				console.log(
+					'ServiceWorker registration successful with scope: ',
+					registration.scope
 					);
-				})
-				.catch(function (err) {
-					console.log('ServiceWorker registration failed: ', err);
-				});
+			})
+			.catch(function (err) {
+				console.log('ServiceWorker registration failed: ', err);
+			});
 		}
 	</script>
 	<!-- Favicons -->
 	<link
-		rel="icon"
-		href="/images/icons/favicon-32x32.png"
-		sizes="32x32"
-		type="image/png"
+	rel="icon"
+	href="/images/icons/favicon-32x32.png"
+	sizes="32x32"
+	type="image/png"
 	/>
 	<link
-		rel="icon"
-		href="/images/icons/favicon-16x16.png"
-		sizes="16x16"
-		type="image/png"
+	rel="icon"
+	href="/images/icons/favicon-16x16.png"
+	sizes="16x16"
+	type="image/png"
 	/>
 	<link rel="icon" href="/images/icons/favicon.ico" />
 	<meta name="theme-color" content="#4A5462" />
 
 	<!-- Inter Font -->
 	<link
-		rel="stylesheet"
-		type="text/css"
-		href="https://rsms.me/inter/inter.css"
+	rel="stylesheet"
+	type="text/css"
+	href="https://rsms.me/inter/inter.css"
 	/>
 	<script type="module">
 		import { setup, disconnect } from 'https://cdn.skypack.dev/twind/shim'
@@ -58,11 +58,11 @@
 		})
 	</script>
 	<style>
-	html {
-		font-family: 'Inter-var', system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "PT Sans", "Open Sans", "Fira Sans", "Droid Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
-		/*font-feature-settings: "cv02", "cv03", "cv04", "cv05", "cv08", "cv09", "cv10", "cv11", "calt", "kern";*/
-	}
-	[x-cloak] { display: none }
+		html {
+			font-family: 'Inter-var', system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "PT Sans", "Open Sans", "Fira Sans", "Droid Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+			/*font-feature-settings: "cv02", "cv03", "cv04", "cv05", "cv08", "cv09", "cv10", "cv11", "calt", "kern";*/
+		}
+		[x-cloak] { display: none }
 	</style>
 	<script defer type="module">
 		import main from '/js/components/main.js'
@@ -191,26 +191,26 @@
 								<p>A web up with a clean interface &amp; Anilist integration to read your downloaded manga comfortably.</p>
 								<h2 class="text-xl mt-2">Folder Structure:</h2>
 								<p>Open the folder that have your mangas, make sure they're not under extra subdirectories:</p>
-<pre class="text-xs p-1 bg-gray-200 rounded-lg text-black">
-	Mangas (drop this)/
-	├── Manga 1/
-	│   ├── Chapter 1/
-	│   │   ├── 0.jpg
-	│   │   ├── 1.jpg
-	│   │   └── ..
-	│   └── Chapter 2/
-	│       ├── page-0.png
-	│       ├── page-1.png
-	│       └── ..
-	└── Manga 2/
-	    ├── c-4/
-	    │   ├── image-1.jpg
-	    │   ├── image-2.jpg
-	    │   └── ...
-	    └── c-5/
-	        ├── 0001.jpg
-	        └── 0002.jpg
-</pre>
+								<pre class="text-xs p-1 bg-gray-200 rounded-lg text-black">
+Mangas (drop this)/
+├── Manga 1/
+│   ├── Chapter 1/
+│   │   ├── 0.jpg
+│   │   ├── 1.jpg
+│   │   └── ..
+│   └── Chapter 2/
+│       ├── page-0.png
+│       ├── page-1.png
+│       └── ..
+└── Manga 2/
+├── c-4/
+│   ├── image-1.jpg
+│   ├── image-2.jpg
+│   └── ...
+└── c-5/
+├── 0001.jpg
+└── 0002.jpg
+								</pre>
 							</div>
 							<div class="">
 								<p class="w-80 max-w-full my-4">Made by <a href="https://twitter.com/rehhouari" class="font-bold">@rehhouari</a>. <a href="https://github.com/rehhouari/clovre" class="underline">MIT License - Source on GitHub</a></p>
