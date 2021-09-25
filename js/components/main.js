@@ -44,6 +44,12 @@ let main = function() {
 		offlineMode: this.$persist(false),
 		username: this.$persist(''),
 		init() {
+			history.pushState(null, null, window.location.pathname);
+			window.addEventListener('popstate', function(event) {
+					event.preventDefault();
+					history.pushState(null, null, window.location.pathname);
+					escape();
+			}
 			this.authUrl = `https://anilist.co/api/v2/oauth/authorize?client_id=${this.dev?'6595':'6586'}&response_type=token`
 			if (document.location.hash.replace('#access_token=', '').length == 1121) {
 				this.accessToken = document.location.hash.match(/\#(?:access_token)\=([\S\s]*?)\&/)[1];

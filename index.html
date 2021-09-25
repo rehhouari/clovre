@@ -79,10 +79,10 @@
 </head>
 
 <body class="text-center bg-gray-400 text-gray-800 dark:(text-gray-600 bg-gray-900 p-0 transition-colors duration-300">
-	<div class="relative min-h-screen max-h-screen flex select-none" x-data="main()" @keydown.document.shift.d.prevent="toggle('darkMode')" @keydown.document.escape="escape" @keydown.document.ctrl.k.prevent="focusInput()" x-effect="document.querySelector('html').classList.toggle('dark', darkMode)" @keydown.document.shift.m="toggle('muteAudio')" @keydown.document.shift.space.stop="toggle('openMenu')" x-effect="if(loading) window.blur()"  @keydown.document="if (loading) { event.stopPropagation() }" @keydown.document.shift.f="toggle('offlineMode')" @keydown.document.shift.t="toggle('test')">
+	<div class="relative min-h-screen max-h-screen flex select-none" x-data="main()" @popstate.window.prevent="escape" @keydown.document.shift.d.prevent="toggle('darkMode')" @keydown.document.escape="escape" @keydown.document.ctrl.k.prevent="focusInput()" x-effect="document.querySelector('html').classList.toggle('dark', darkMode)" @keydown.document.shift.m="toggle('muteAudio')" @keydown.document.shift.space.stop="toggle('openMenu')" x-effect="if(loading) window.blur()"  @keydown.document="if (loading) { event.stopPropagation() }" @keydown.document.shift.f="toggle('offlineMode')" @keydown.document.shift.t="toggle('test')">
 		<!-- modal -->
 		<div class="absolute flex w-full h-screen max-w-full bg-black bg-opacity-50 z-10 lg:(px-40) transition-colors duration-300" x-transition x-show="openMenu && !loading">
-			<div class="w-full bg-white text-black dark:(bg-gray-800 text-white) transition-colors duration-300 shadow-xl p-2 lg:(p-4 rounded-lg) self-center items-center justify-center flex flex-col space-y-4 inset-x-0 mx-auto select-text" @click.away="openMenu = false; menuTab = 1">
+			<div class="w-full bg-white text-black dark:(bg-gray-800 text-white) transition-colors duration-300 shadow-xl p-2 lg:(p-4 rounded-lg) self-center items-center justify-center flex flex-col space-y-4 inset-x-0 mx-auto" @click.away="openMenu = false; menuTab = 1">
 				<!-- about -->
 				<div class="mt-4 lg:mt-0">
 					<div class="">
@@ -101,7 +101,7 @@
 						</div>
 						<hr class="border-0 border-b-1 my-2 mx-auto">
 					</div>
-					<div class="flex max-h-96">		
+					<div class="flex max-h-96 select-text">		
 						<!-- shortcuts tab -->
 						<div class="flex flex-col space-y-2 overflow-y-auto mb-4" x-show="menuTab==1">
 							<div class="flex flex-row bg-gray-200 dark:bg-gray-600 rounded-md p-2 transition-colors duration-100">
@@ -212,7 +212,7 @@
 </pre>
 							</div>
 							<div class="">
-								<p class="text-xs w-80 max-w-full my-4">Made by <a href="https://twitter.com/rehhouari" class="font-bold">@rehhouari</a>. <a href="https://github.com/rehhouari/clovre" class="underline">MIT License</a></p>
+								<p class="w-80 max-w-full my-4">Made by <a href="https://twitter.com/rehhouari" class="font-bold">@rehhouari</a>. <a href="https://github.com/rehhouari/clovre" class="underline">MIT License - Source on GitHub</a></p>
 							</div>
 						</div>
 						<!-- anilist tab -->
@@ -255,7 +255,7 @@
 					</div>
 				</template>
 				<template x-if="loading == 'mangas'">
-					<div class="flex flex-col space-y-2 flex-grow h-full dark:bg-gray-600 z-50  bg-gray-200 p-2 lg:p-4 lg:m-4 lg:rounded-xl">
+					<div class="flex flex-col space-y-2 flex-grow max-h-full h-full overflow-hidden dark:bg-gray-600 z-50  bg-gray-200 p-2 lg:p-4 lg:m-4 lg:rounded-xl">
 						<div class="flex flex-row space-x-2 p-2 py-4 w-full max-h-10 h-10 rounded-lg bg-white dark:bg-gray-400">
 						</div>
 						<div class="flex space-y-4 overflow-y-auto justify-evenly space-x-4 sm:justify-start flex-wrap flex-grow">
