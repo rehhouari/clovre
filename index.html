@@ -150,7 +150,7 @@
 									<label class="space-x-4"><input type="checkbox" class="" x-model="offlineMode" aria-label="Toggle offline mode"><span class="font-bold">shift+f</span></label>
 								</div>
 								<div class="justify-end flex-grow">
-									<p class="text-base text-left">Toggle offline mode (ie. do not fetch covers at start)</p>
+									<p class="text-base text-left">Toggle offline mode (ie. do not fetch covers on load)</p>
 								</div>
 							</div>
 							<div class="flex flex-col bg-gray-200 dark:bg-gray-600 rounded-md p-2 transition-colors duration-100">
@@ -303,21 +303,14 @@
 				</template>
 			</div>
 		</template>
-		<template x-if="test">
-			<div class="mx-auto inline-block overflow-y-auto pb-2 overflow-y-hidden">
-				<div class="mx-auto">
-					<div style="height:800px; width:600px" class="bg-gray-200 max-w-full mx-auto" :class="imageSize(false)"></div>
-				</div>
-			</div>
-		</template>
 		<!-- directory open screen-->
-		<template x-if="!loaded && !loading && !test">
+		<template x-if="!loaded && !loading">
 			<button class="mx-auto text-current bg-gray-200 dark:(bg-gray-400 text-white) transition-colors duration-300 w-full max-w-full shadow-lg p-4 lg:(m-4 rounded-xl) flex flex-row items-center" @drop.prevent="dropMangasDirectory" @dragover.prevent="dragover = true" @dragleave="dragover = false"  @click="openMangasDir" >
 				<p class="dark:text-gray-800 text-2xl font-bold flex-grow transition-colors duration-300"><span x-show="!dragover">Click to open a folder that contain your mangas or drag and drop it.</span><span x-show="dragover">Drop directory</span></p>
 			</button>
 		</template>
 		<!-- manga selection -->
-		<template x-if="loaded && selectedManga == null && !loading && !test">
+		<template x-if="loaded && selectedManga == null && !loading">
 			<div class="flex flex-col space-y-2 flex-grow dark:bg-gray-600 transition-colors duration-300 bg-gray-200 p-2 lg:p-4 lg:m-4 lg:rounded-xl shadow-sm">
 				<div class="flex flex-row space-x-2">
 					<input type="search" class="p-2 w-full flex-grow rounded-lg font-bold bg-white dark:(bg-gray-400 text-white placeholder-gray-200) transition-colors duration-300 shadow-sm focus:shadow-lg" placeholder="Search Mangas" x-model="searchMangas" autofocus aria-label="Search Mangas" x-ref="searchMangas" @keydown.escape.stop="blur()">
@@ -346,7 +339,7 @@
 			</div>
 		</template>
 		<!-- chapter selection & manga details -->
-		<template x-if="loaded && selectedManga && selectedChapter==null && !loading && !test">
+		<template x-if="loaded && selectedManga && selectedChapter==null && !loading">
 			<div class="flex flex-col space-y-2 flex-grow dark:bg-gray-600 transition-colors duration-300 bg-gray-200 p-2 lg:p-4 lg:m-4 lg:rounded-xl shadow-sm" @keyup.document.shift.v="toggle('chaptersOrderDescending')">
 				<div class="flex flex-row md:space-x-2 ">
 					<div class="hidden md:(flex flex-grow-0 flex-col self-end)">	

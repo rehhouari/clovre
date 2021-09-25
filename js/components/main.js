@@ -20,8 +20,6 @@ let main = function() {
 		loading: '',
 		clickToLoad: false,
 		loadedImages: 0,
-		test: false,
-		loadingProgress: null,
 		dragover: false,
 		pageSize: this.$persist(0),
 		darkMode: this.$persist(false),
@@ -45,7 +43,7 @@ let main = function() {
 		username: this.$persist(''),
 		init() {
 			this.authUrl = `https://anilist.co/api/v2/oauth/authorize?client_id=${this.dev?'6595':'6586'}&response_type=token`
-			if (document.location.hash.replace('#access_token=', '').length == 1121) {
+			if (document.location.hash.startsWith('#access_token=')) {
 				this.accessToken = document.location.hash.match(/\#(?:access_token)\=([\S\s]*?)\&/)[1];
 				window.close()
 			}
