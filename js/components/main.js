@@ -75,7 +75,6 @@ let main = function() {
 						registration.scope
 						);
 					registration.addEventListener('updatefound', function () {
-						console.log('update found', this)
 						// A wild service worker has appeared in reg.installing!
 						this.newWorker = registration.installing;
 
