@@ -18,6 +18,34 @@ If you find this useful consider [following me](https://rehhouari.bio.link/)!
 
 https://clovre.vercel.app
 
+### Usage
+
+- You can open the help window any time by pressing <kbd>shift</kbd> <kbd>space</kbd>, there you can login to AniList and see shortcuts & toggle them.
+- Simply click anywhere to open the directory that have your downloaded mangas (or drag and drop it)
+    - Make sure it follow this structure (no subdirectories for source etc.):
+
+```
+Mangas (drop this)/
+├── Manga 1/
+│   ├── Chapter 1/
+│   │   ├── 0.jpg
+│   │   ├── 1.jpg
+│   │   └── ..
+│   └── Chapter 2/
+│       ├── page-0.png
+│       ├── page-1.png
+│       └── ..
+└── Manga 2/
+    ├── c-4/
+    │   ├── image-1.jpg
+    │   ├── image-2.jpg
+    │   └── ...
+    └── c-5/
+        ├── 0001.jpg
+        └── 0002.jpg
+```
+
+> I find [Hakuneko](https://github.com/manga-download/hakuneko) the best downloader and the folder structure is compatible with Clovre as well.
   
 ## Deployment
 
