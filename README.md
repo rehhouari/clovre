@@ -14,11 +14,9 @@ If you find this useful consider [following me](https://rehhouari.bio.link/)!
 - [AniList](https://anilist.co) integration to fetch covers & login to set progress etc., without leaving the app.
     - Runs offline, loading covers and AniList login is optional. Offline toggle is provided.
 
-## Demo
+## Usage
 
-https://clovre.vercel.app
-
-### Usage
+Visit: https://clovre.vercel.app
 
 - You can open the help window any time by pressing <kbd>shift</kbd> <kbd>space</kbd>, there you can login to AniList and see shortcuts & toggle them.
 - Simply click anywhere to open the directory that have your downloaded mangas (or drag and drop it)
