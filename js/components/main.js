@@ -42,6 +42,7 @@ let main = function() {
 		mangaStatusFilter: 'any',
 		offlineMode: this.$persist(false),
 		username: this.$persist(''),
+		hitCounted: this.$persist(false),
 		init() {
 			this.authUrl = `https://anilist.co/api/v2/oauth/authorize?client_id=${this.dev?'6595':'6586'}&response_type=token`
 			if (document.location.hash.startsWith('#access_token=')) {
@@ -62,6 +63,7 @@ let main = function() {
 				this.openMenu = true
 				this.firstStart = false
 			}
+			if (window.navigator.onLine && !this.hitCounted) fetch('https://api.countapi.xyz/hit/clovre.vercel.app/visits')
 		},
 		initSW() {
 			this.newWorker = null
