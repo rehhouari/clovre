@@ -63,7 +63,10 @@ let main = function() {
 				this.openMenu = true
 				this.firstStart = false
 			}
-			if (window.navigator.onLine && !this.hitCounted) fetch('https://api.countapi.xyz/hit/clovre.vercel.app/visits')
+			if (window.navigator.onLine && !this.hitCounted) {
+				fetch('https://api.countapi.xyz/hit/clovre.vercel.app/visits')
+				this.hitCounted = true
+			}
 		},
 		initSW() {
 			this.newWorker = null
