@@ -62,11 +62,11 @@
 		import main from '/js/components/main.js'
 		import Alpine from 'https://unpkg.com/alpinejs@3.x.x/dist/module.esm.js'
 		import persist from 'https://unpkg.com/@alpinejs/persist@3.4.0/dist/module.esm.js'
-		import trap from 'https://unpkg.com/@alpinejs/trap@3.x.x/dist/module.esm.js'
+		import focus from 'https://unpkg.com/@alpinejs/focus@3.x.x/dist/module.esm.js'
 		import intersect from 'https://unpkg.com/@alpinejs/intersect@3.x.x/dist/module.esm.js'
 		Alpine.data('main', main)
 		Alpine.plugin(persist)
-		Alpine.plugin(trap)
+		Alpine.plugin(focus)
 		Alpine.plugin(intersect)
 		window.Alpine = Alpine
 		Alpine.start()
