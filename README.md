@@ -42,6 +42,7 @@ Mangas (drop this)/
         ├── 0001.jpg
         └── 0002.jpg
 ```
+> Notice how the folders and images **can** have different naming conventions but what matters is they're all **orderd numerically**s
 
 > I find [Hakuneko](https://github.com/manga-download/hakuneko) the best downloader and the folder structure is compatible with Clovre as well.
   
