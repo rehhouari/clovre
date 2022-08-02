@@ -10,7 +10,7 @@ var urlsToCache = [
 	'/audio/off.ogg',
 	'https://cdn.jsdelivr.net/npm/pwacompat@2.x.x/pwacompat.min.js',
 	'https://unpkg.com/@alpinejs/persist@3.4.0/dist/module.esm.js',
-	'https://unpkg.com/@alpinejs/trap@3.x.x/dist/module.esm.js',
+	'https://unpkg.com/@alpinejs/focus@3.x.x/dist/module.esm.js',
 	'https://unpkg.com/@alpinejs/intersect@3.x.x/dist/module.esm.js',
 	'https://unpkg.com/alpinejs@3.x.x/dist/module.esm.js',
 	'https://cdn.skypack.dev/twind/shim',
