@@ -48,7 +48,13 @@ Mangas (drop this)/
   
 ## Deployment
 
-No build step, can run anywhere.
+No build step, use a webserver with **HTTPS support**. like Caddy
+<details>
+<summary>example Caddyfile</summary>
+<code><pre>localhost
+root * /path/to/repo/clovre
+file_server</pre></code>
+</details>
   
 ## Why
 
