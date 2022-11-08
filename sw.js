@@ -21,7 +21,8 @@ var urlsToCache = [
 	'/images/icons/maskable_icon_x512.png',
 	'/images/icons/favicon-32x32.png',
 	'/images/icons/favicon-16x16.png',
-	'/images/icons/favicon.ico'
+	'/images/icons/favicon.ico',
+	'https://clovre.pigeonivy.com/images/ogimage.png',
 ];
 
 self.addEventListener('install', function (event) {
