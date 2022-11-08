@@ -5,6 +5,7 @@ Clovre is a web app with a clean uncluttered interface for reading downloaded ma
 
 If you find this useful consider [following me](https://rehhouari.bio.link/)!
 
+[Screenshots](https://imgur.com/a/XeLxKGD)
 
 ## Features
 
@@ -21,6 +22,8 @@ Visit: https://clovre.vercel.app
 - You can open the help window any time by pressing <kbd>shift</kbd> <kbd>space</kbd>, there you can login to AniList and see shortcuts & toggle them.
 - Simply click anywhere to open the directory that have your downloaded mangas (or drag and drop it)
     - Make sure it follow this structure (no subdirectories for source etc.):
+
+[Try downloading this example folder and open it! it doesn't include any copyrighted content](https://github.com/rehhouari/clovre/blob/main/example-folder-structure.zip)
 
 ```
 Mangas (drop this)/
