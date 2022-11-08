@@ -17,7 +17,7 @@ If you find this useful consider [following me](https://twitter.com/rehhouari)!
 
 ## Usage
 
-Visit: https://clovre.vercel.app
+Visit: https://clovre.pigeonivy.com
 
 - You can open the help window any time by pressing <kbd>shift</kbd> <kbd>space</kbd>, there you can login to AniList and see shortcuts & toggle them.
 - Simply click anywhere to open the directory that have your downloaded mangas (or drag and drop it)
