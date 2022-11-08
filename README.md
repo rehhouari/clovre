@@ -3,7 +3,7 @@
 
 Clovre is a web app with a clean uncluttered interface for reading downloaded manga & webtoons comfortably.
 
-If you find this useful consider [following me](https://rehhouari.bio.link/)!
+If you find this useful consider [following me](https://twitter.com/rehhouari)!
 
 [Screenshots](https://imgur.com/a/XeLxKGD)
 
