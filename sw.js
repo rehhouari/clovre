@@ -1,4 +1,4 @@
-var CACHE_NAME = 'appcache-8';
+var CACHE_NAME = 'appcache-9';
 
 var urlsToCache = [
 	'/',
