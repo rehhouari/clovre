@@ -1,9 +1,9 @@
-let main = function() {
+let main = function () {
 	return {
 		loaded: false,
 		mangas: [],
 		chapters: [],
-		pages: {images: [], sizes: []},
+		pages: { images: [], sizes: [] },
 		selectedManga: null,
 		selectedMangaData: null,
 		selectedChapter: null,
@@ -27,7 +27,7 @@ let main = function() {
 		mangasHandle: null,
 		chaptersHandle: null,
 		persistedData: this.$persist(Object.create(null)),
-		dev: location.hostname=='localhost',
+		dev: location.hostname == 'localhost',
 		authUrl: '',
 		graphqlUrl: 'https://graphql.anilist.co',
 		audio: null,
@@ -44,18 +44,18 @@ let main = function() {
 		username: this.$persist(''),
 		hitCounted: this.$persist(false),
 		init() {
-			this.authUrl = `https://anilist.co/api/v2/oauth/authorize?client_id=${this.dev?'6595':'6586'}&response_type=token`
+			this.authUrl = `https://anilist.co/api/v2/oauth/authorize?client_id=${this.dev ? '6595' : '6586'}&response_type=token`
 			if (document.location.hash.startsWith('#access_token=')) {
 				this.accessToken = document.location.hash.match(/\#(?:access_token)\=([\S\s]*?)\&/)[1];
 				window.close()
 			}
-			window.addEventListener('popstate', function(event) {
+			window.addEventListener('popstate', function (event) {
 				event.preventDefault()
 				history.pushState(null, null, window.location.pathname)
 				this.escape()
 			})
 			history.pushState(null, null, window.location.pathname)
-			this.audio = {on: new Audio(), off: new Audio()}
+			this.audio = { on: new Audio(), off: new Audio() }
 			this.audio.on.src = "/audio/on.ogg"
 			this.audio.off.src = "/audio/off.ogg"
 			this.initSW()
@@ -73,33 +73,33 @@ let main = function() {
 			let refreshing
 			if ('serviceWorker' in navigator) {
 				navigator.serviceWorker
-				.register('/sw.js')
-				.then((registration) => {
-					console.log(
-						'ServiceWorker registration successful with scope: ',
-						registration.scope
+					.register('/sw.js')
+					.then((registration) => {
+						console.log(
+							'ServiceWorker registration successful with scope: ',
+							registration.scope
 						);
-					registration.addEventListener('updatefound', function () {
-						// A wild service worker has appeared in reg.installing!
-						this.newWorker = registration.installing;
+						registration.addEventListener('updatefound', function () {
+							// A wild service worker has appeared in reg.installing!
+							this.newWorker = registration.installing;
 
-						this.newWorker.addEventListener('statechange', function () {
-							// Has network.state changed?
-							switch (this.newWorker.state) {
-								case 'installed':
-									if (navigator.serviceWorker.controller) {
-										// new update available
-										this.showUpdateBar = true
-									}
-									// No update available
-									break;
-							}
+							this.newWorker.addEventListener('statechange', function () {
+								// Has network.state changed?
+								switch (this.newWorker.state) {
+									case 'installed':
+										if (navigator.serviceWorker.controller) {
+											// new update available
+											this.showUpdateBar = true
+										}
+										// No update available
+										break;
+								}
+							}.bind(this));
 						}.bind(this));
-					}.bind(this));
-				})
-				.catch(function (err) {
-					console.log('ServiceWorker registration failed: ', err);
-				});
+					})
+					.catch(function (err) {
+						console.log('ServiceWorker registration failed: ', err);
+					});
 
 			}
 			navigator.serviceWorker.addEventListener('controllerchange', function () {
@@ -144,8 +144,8 @@ let main = function() {
 			if (this.loading) return
 			this[what] = !this[what]
 			if (this[what] == false) this.playOff()
-				else this.playOn()
-			},
+			else this.playOn()
+		},
 		setPageWidth(width) {
 			this.pageSize = width
 			this.playOn()
@@ -198,16 +198,16 @@ let main = function() {
 								if (this.accessToken) {
 									let f = await this.isFavorited(id)
 									if (f != null) favorited = f
-									let statusData = await this.request(true, queries.status, {id: id})
-									status = statusData?.Media?.mediaListEntry ?? {id: null, status: null, progress: 0}
+									let statusData = await this.request(true, queries.status, { id: id })
+									status = statusData?.Media?.mediaListEntry ?? { id: null, status: null, progress: 0 }
 									if (status.status) status.index = Object.keys(mangaStatus).indexOf(status.status)
 									else status.index = 0
 								}
-								this.persistedData[this.mangasHandle.name].push({name: entry.name, id: id, coverImage: coverImage, chapters: chapters, favorited: favorited, status: status})
+								this.persistedData[this.mangasHandle.name].push({ name: entry.name, id: id, coverImage: coverImage, chapters: chapters, favorited: favorited, status: status })
 							}
 						}
 					}
-					let mangaObject = {name: entry.name, id: id, coverImage: coverImage, chapters: chapters, favorited: favorited, status: status}
+					let mangaObject = { name: entry.name, id: id, coverImage: coverImage, chapters: chapters, favorited: favorited, status: status }
 					this.mangas.push(mangaObject)
 				}
 			}
@@ -247,7 +247,7 @@ let main = function() {
 		async selectChapter(name) {
 			this.loading = 'chapter'
 			this.loadedImages = 0
-			this.pages = {images: [], sizes: []}
+			this.pages = { images: [], sizes: [] }
 			let pagesHandle = await this.chaptersHandle.getDirectoryHandle(name, { create: false })
 			let total = 0
 			let processed = 0
@@ -266,11 +266,11 @@ let main = function() {
 						let image = new Image();
 						image.src = event.target.result;
 						image.onload = () => {
-							this.pages.sizes[id] = {width: image.width, height: image.height}
+							this.pages.sizes[id] = { width: image.width, height: image.height }
 							processed++
 							if (processed == total) {
-								this.pages.images = this.pages.images.filter(e=>e)
-								this.pages.sizes = this.pages.sizes.filter(e=>e)
+								this.pages.images = this.pages.images.filter(e => e)
+								this.pages.sizes = this.pages.sizes.filter(e => e)
 								this.loading = ''
 							}
 						}
@@ -283,43 +283,43 @@ let main = function() {
 			this.selectedChapter = name
 		},
 		nextChapter() {
-			let currentIndex = this.chapters.findIndex((e)=>e==this.selectedChapter)
-			if (currentIndex == this.chapters.length-1) {
+			let currentIndex = this.chapters.findIndex((e) => e == this.selectedChapter)
+			if (currentIndex == this.chapters.length - 1) {
 				this.playOff()
 				return
 			} else {
-				this.selectChapter(this.chapters[currentIndex+1])
+				this.selectChapter(this.chapters[currentIndex + 1])
 				this.playOn()
 			}
 		},
 		previousChapter() {
-			let currentIndex = this.chapters.findIndex((e)=>e==this.selectedChapter)
+			let currentIndex = this.chapters.findIndex((e) => e == this.selectedChapter)
 			if (currentIndex == 0) {
 				this.playOff()
 			} else {
-				this.selectChapter(this.chapters[currentIndex-1])
+				this.selectChapter(this.chapters[currentIndex - 1])
 				this.playOn()
 			}
 		},
 		async isFavorited(id) {
-			let data = await this.request(true, queries.favorited, {id: id})
-			 return data?.Media?.isFavourite
+			let data = await this.request(true, queries.favorited, { id: id })
+			return data?.Media?.isFavourite
 		},
 		async favoriteToggle() {
-			let data = await this.request(true, queries.favorite, {"mangaId": this.selectedMangaData.id})
+			let data = await this.request(true, queries.favorite, { "mangaId": this.selectedMangaData.id })
 			if (await data != null) {
 				this.playOn()
-				let f =  await this.isFavorited(this.selectedMangaData.id)
+				let f = await this.isFavorited(this.selectedMangaData.id)
 				if (f != null) {
 					this.selectedMangaData.favorited = f
 					let i = this.persistedData[this.mangasHandle.name].findIndex((e) => e.name == this.selectedManga)
-					this.persistedData[this.mangasHandle.name][i].favorited = f		
+					this.persistedData[this.mangasHandle.name][i].favorited = f
 				}
 			}
 		},
 		async setStatus(status) {
 			if (status == 'null') {
-				let data = await this.request(true, queries.deleteStatus, {id: this.selectedMangaData.status.id})
+				let data = await this.request(true, queries.deleteStatus, { id: this.selectedMangaData.status.id })
 				if (data?.DeleteMediaListEntry?.deleted) {
 					this.playOn()
 					this.selectedMangaData.status.status = status
@@ -330,7 +330,7 @@ let main = function() {
 					alert('Error deleting status')
 				}
 			} else {
-				let data = await this.request(true, queries.setStatus, {mediaId: this.selectedMangaData.id, status: status})
+				let data = await this.request(true, queries.setStatus, { mediaId: this.selectedMangaData.id, status: status })
 				if (data?.SaveMediaListEntry?.status != status) {
 					alert('Error setting status')
 				} else {
@@ -341,7 +341,7 @@ let main = function() {
 			}
 		},
 		async setProgress(value) {
-			let data = await this.request(true, queries.setProgress, {mediaId: this.selectedMangaData.id, progress: value})
+			let data = await this.request(true, queries.setProgress, { mediaId: this.selectedMangaData.id, progress: value })
 			if (data?.SaveMediaListEntry?.progress != value) {
 				alert('Error setting progress')
 			} else {
@@ -358,20 +358,25 @@ let main = function() {
 			if (index == -1 || !mangaData.coverImage) {
 				let mangaObject = this.loadMangaDataFromAnilist(mangaData.name)
 				this.persistedData[this.mangasHandle.name].push(mangaObject)
-				this.mangas[this.mangas.findIndex((e)=>e.id == mangaData.id)] = mangaObject
+				this.mangas[this.mangas.findIndex((e) => e.id == mangaData.id)] = mangaObject
 			} else {
 				if (this.accessToken) {
 					let favorited = await this.isFavorited(mangaData.id) ?? mangaData.favorited
-					let statusData = await this.request(true, queries.status, {id: mangaData.id})
+					let statusData = await this.request(true, queries.status, { id: mangaData.id })
 					let status = statusData.Media?.mediaListEntry
-					if (status.status) status.index = Object.keys(mangaStatus).indexOf(status.status)
-					else status.index = 0
+					if (!status) {
+						status = { index: 0 }
+					} else {
+						console.log('regular status:', status)
+						if (status.status) status.index = Object.keys(mangaStatus).indexOf(status.status)
+						else status.index = 0
+					}
 					this.persistedData[this.mangasHandle.name][index].favorited = favorited
 					this.persistedData[this.mangasHandle.name][index].status = status
 					mangaData.status = status
 					mangaData.favorited = favorited
 				}
-				let chaptersData = await this.request(false, queries.chapters, {id: mangaData.id})
+				let chaptersData = await this.request(false, queries.chapters, { id: mangaData.id })
 				let chapters = chaptersData?.Media?.chapters ?? mangaData.chapters
 				this.persistedData[this.mangasHandle.name][index].chapters = chapters
 				mangaData.chapters = chapters
@@ -392,10 +397,10 @@ let main = function() {
 					if (!mangaData) {
 						let id = Math.floor(Math.random() * (1000000 - 500000) + 500000)
 						let coverImage = null
-						mangaData = {id: id, coverImage: coverImage, name: entry.name}
+						mangaData = { id: id, coverImage: coverImage, name: entry.name }
 					}
 					let i = this.mangas.push(mangaData)
-					this.selectedMangaData = this.mangas[i-1]
+					this.selectedMangaData = this.mangas[i - 1]
 					this.persistedData[this.mangasHandle.name].push(mangaData)
 				}
 			}
@@ -408,11 +413,11 @@ let main = function() {
 				let coverImage = await toDataURL(data.coverImage.large)
 				let chapters = data.chapters
 				let favorited = await this.isFavorited(id) ?? false
-				let statusData = await this.request(true, queries.status, {id: id})
+				let statusData = await this.request(true, queries.status, { id: id })
 				let status = statusData?.Media?.mediaListEntry
 				if (status.status) status.index = Object.keys(mangaStatus).indexOf(status.status)
 				else status.index = 0
-				return {name: name, id: id, coverImage: coverImage, chapters: chapters, favorited: favorited, status: status}
+				return { name: name, id: id, coverImage: coverImage, chapters: chapters, favorited: favorited, status: status }
 			}
 		},
 		escape() {
@@ -421,9 +426,9 @@ let main = function() {
 				this.openMenu = false
 				this.menuTab = 1
 				play = true
-			} else if (this.selectedChapter !=null) {
+			} else if (this.selectedChapter != null) {
 				this.selectedChapter = null
-				this.pages = {images: [], sizes: []}
+				this.pages = { images: [], sizes: [] }
 				document.title = `${this.selectedManga} | Clovre`
 				play = true
 			} else if (this.selectedManga) {
@@ -452,17 +457,17 @@ let main = function() {
 			if (hide) {
 				res = 'hidden'
 			} else {
-				if (this.clickToLoad) 
+				if (this.clickToLoad)
 					res = 'cursor-pointer '
 				switch (this.pageSize) {
 					case 1:
 						res = res + 'md:max-w-lg lg:max-w-xl'
 						break;
 					case 2:
-						res =  res + 'md:max-w-xl lg:max-w-4xl'
+						res = res + 'md:max-w-xl lg:max-w-4xl'
 						break;
 					case 3:
-						res =  res + '!w-screen'
+						res = res + '!w-screen'
 						break;
 				}
 			}
@@ -507,14 +512,14 @@ let main = function() {
 				mode: 'cors',
 			};
 
-			let res =  await fetch(this.graphqlUrl, options).then((res)=>res.json()).catch((err)=>console.error({err}));
+			let res = await fetch(this.graphqlUrl, options).then((res) => res.json()).catch((err) => console.error({ err }));
 			return res?.data
 		},
 	}
 }
 
 const queries = {
-	username:`
+	username: `
 	query  {
 		Viewer {
 			name
@@ -588,7 +593,7 @@ const queries = {
 }
 
 
-const mangaStatus =  {
+const mangaStatus = {
 	null: 'NULL',
 	CURRENT: 'CURRENT',
 	PLANNING: 'PLANNING',
@@ -599,17 +604,17 @@ const mangaStatus =  {
 }
 
 const toDataURL = async (url) => fetch(url)
-.then(response => response.blob())
-.then(blob => new Promise((resolve, reject) => {
-	const reader = new FileReader()
-	reader.onloadend = () => resolve(reader.result)
-	reader.onerror = reject
-	reader.readAsDataURL(blob)
-}))
+	.then(response => response.blob())
+	.then(blob => new Promise((resolve, reject) => {
+		const reader = new FileReader()
+		reader.onloadend = () => resolve(reader.result)
+		reader.onerror = reject
+		reader.readAsDataURL(blob)
+	}))
 
 const anilistSearch = async (name) => {
 	let variables = {
-		"search":  name,
+		"search": name,
 		"page": 1,
 		"perPage": 1,
 		"type": "MANGA"
@@ -627,8 +632,8 @@ const anilistSearch = async (name) => {
 		}),
 		mode: 'cors'
 	};
-	let res =  await fetch(url, options).then((res)=>{return res.json()})
-	.catch((err)=>console.error({err}));
+	let res = await fetch(url, options).then((res) => { return res.json() })
+		.catch((err) => console.error({ err }));
 	return res?.data?.Page?.media?.[0]
 }
 export default main
