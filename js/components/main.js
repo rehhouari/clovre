@@ -33,7 +33,7 @@ let main = function () {
 		audio: null,
 		muteAudio: false,
 		openMenu: false,
-		menuTab: 1,
+		menuTab: 0,
 		firstStart: this.$persist(true),
 		accessToken: this.$persist(''),
 		loginInterval: null,
@@ -424,7 +424,7 @@ let main = function () {
 			let play = false
 			if (this.openMenu) {
 				this.openMenu = false
-				this.menuTab = 1
+				this.menuTab = 0
 				play = true
 			} else if (this.selectedChapter != null) {
 				this.selectedChapter = null
