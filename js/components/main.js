@@ -222,7 +222,8 @@ let main = function () {
 			return m
 		},
 		getChapters() {
-			let res = this.chapters.filter((e) => e.toLowerCase().replace(' ', '').trim().includes(this.searchChapters.toLowerCase().replace(' ', '').trim())).sort()
+			const collator = new Intl.Collator([], {numeric: true});
+			let res = this.chapters.filter((e) => e.toLowerCase().replace(' ', '').trim().includes(this.searchChapters.toLowerCase().replace(' ', '').trim())).sort(collator.compare)
 			if (this.chaptersOrderDescending) {
 				return res
 			} else {
@@ -238,7 +239,8 @@ let main = function () {
 					this.chapters.push(chapter.name)
 				}
 			}
-			this.chapters = this.chapters.sort()
+			const collator = new Intl.Collator([], {numeric: true});
+			this.chapters = this.chapters.sort(collator.compare)
 			this.selectedMangaData = this.mangas[this.mangas.findIndex((e) => e.name == name)]
 			document.title = name + " | Clovre"
 			this.selectedManga = name
