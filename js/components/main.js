@@ -229,6 +229,8 @@ let main = function () {
 					this.mangas.push(mangaObject)
 				}
 			}
+			const collator = new Intl.Collator([], {numeric: true});
+			this.mangas.sort((a, b) => collator.compare(a.name, b.name))
 			this.loaded = true
 			document.title = `Browse | Clovre`
 			this.loading = ''
