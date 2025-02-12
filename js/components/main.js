@@ -173,7 +173,8 @@ let main = function () {
 			this.mangas = []
 			for await (const entry of this.mangasHandle.values()) {
 				if (entry.kind == 'directory') {
-					let id = Math.floor(Math.random() * (1000000 - 500000) + 500000)
+					let id = null
+					let anylistId = null
 					let coverImage = null
 					let favorited = false
 					let status = null
@@ -184,33 +185,52 @@ let main = function () {
 					let index = this.persistedData[this.mangasHandle.name].findIndex((e) => e.name == entry.name)
 					if (index != -1) {
 						id = this.persistedData[this.mangasHandle.name][index].id
+						anylistId = this.persistedData[this.mangasHandle.name][index].anylistId
 						coverImage = this.persistedData[this.mangasHandle.name][index].coverImage
 						favorited = this.persistedData[this.mangasHandle.name][index].favorited
 						chapters = this.persistedData[this.mangasHandle.name][index].chapters
 						status = this.persistedData[this.mangasHandle.name][index].status
-					} else {
+					}
+					if (anylistId === null) {
 						if (window.navigator.onLine && !this.offlineMode) {
-							let data = await anilistSearch(entry.name)
-							if (data != null) {
-								id = data.id
-								coverImage = await toDataURL(data.coverImage.large)
-								chapters = data.chapters
-								if (this.accessToken) {
-									let f = await this.isFavorited(id)
-									if (f != null) favorited = f
-									let statusData = await this.request(true, queries.status, { id: id })
-									status = statusData?.Media?.mediaListEntry ?? { id: null, status: null, progress: 0 }
-									if (status.status) status.index = Object.keys(mangaStatus).indexOf(status.status)
-									else status.index = 0
+							try {
+								let data = await anilistSearch(entry.name)
+								if (data != null) {
+									anylistId = data.id
+									coverImage = await toDataURL(data.coverImage.large)
+									chapters = data.chapters
+									if (this.accessToken) {
+										let f = await this.isFavorited(id)
+										if (f != null) favorited = f
+										let statusData = await this.request(true, queries.status, { id: id })
+										status = statusData?.Media?.mediaListEntry ?? { id: null, status: null, progress: 0 }
+										if (status.status) status.index = Object.keys(mangaStatus).indexOf(status.status)
+										else status.index = 0
+									}
+									id = null
+								} else {
+									anylistId = undefined
 								}
-								this.persistedData[this.mangasHandle.name].push({ name: entry.name, id: id, coverImage: coverImage, chapters: chapters, favorited: favorited, status: status })
-							}
+							} catch {}
 						}
 					}
-					let mangaObject = { name: entry.name, id: id, coverImage: coverImage, chapters: chapters, favorited: favorited, status: status }
+					if (id == null) {
+						id = this.persistedData[this.mangasHandle.name].reduce((greatest_id, entry) => entry.id > greatest_id ? entry.id : greatest_id, 0) + 1
+					}
+
+					const mangaObject = { name: entry.name, id: id, anylistId: anylistId, coverImage: coverImage, chapters: chapters, favorited: favorited, status: status }
+					index = this.persistedData[this.mangasHandle.name].findIndex((e) => e.name == entry.name)
+					if (index != -1) {
+						this.persistedData[this.mangasHandle.name][index] = mangaObject
+					} else {
+						this.persistedData[this.mangasHandle.name].push(mangaObject)
+					}
+
 					this.mangas.push(mangaObject)
 				}
 			}
+			const collator = new Intl.Collator([], {numeric: true});
+			this.mangas.sort((a, b) => collator.compare(a.name, b.name))
 			this.loaded = true
 			document.title = `Browse | Clovre`
 			this.loading = ''
